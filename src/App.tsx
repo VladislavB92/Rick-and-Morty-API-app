@@ -1,26 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useRef, useEffect } from 'react'
+import axios from 'axios'
+import { Character } from './components/character'
+import './App.css'
+import 'flexboxgrid'
 
-function App() {
+const App = () => {
+
+  const [characters, setCharacters] = useState([])
+
+  useEffect(() => {
+    axios.get('https://rickandmortyapi.com/api/character')
+      .then((response) => {
+        setCharacters(response.data.results)
+      })
+  }, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <section>
+        <div className="container container-fluid">
+          <div className="row">
+
+            {characters.map(({ id, name, image, status }) => {
+              return (
+
+                <div key={id} className="col-xs-4">
+
+                  <Character
+                    name={name}
+                    image={image}
+                    status={status}
+                  />
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
