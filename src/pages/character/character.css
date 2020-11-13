@@ -19,3 +19,15 @@
     justify-content: center;
     font-size: 30px;
 }
+
+.character__anchor {
+    font-size: 12px;
+    color: cornflowerblue;
+    text-align: right;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.character__anchor:hover {
+    opacity: 0.7;
+}

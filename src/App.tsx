@@ -1,44 +1,46 @@
-import React, { useState, useRef, useEffect } from 'react'
-import axios from 'axios'
-import { Character } from './components/character'
-import './App.css'
-import 'flexboxgrid'
+import React from 'react';
+import Home from './pages/home/Home'
+import About from './pages/about/about'
+import CharacterPage from './pages/character/character'
+import Error404 from './pages/error404/error404'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
-const App = () => {
-
-  const [characters, setCharacters] = useState([])
-
-  useEffect(() => {
-    axios.get('https://rickandmortyapi.com/api/character')
-      .then((response) => {
-        setCharacters(response.data.results)
-      })
-  }, [])
-
+export default function App() {
   return (
-    <div className="App">
-      <section>
-        <div className="container container-fluid">
-          <div className="row">
+    <Router>
+      <div>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/about">About</Link>
+            </li>
+          </ul>
+        </nav>
 
-            {characters.map(({ id, name, image, status }) => {
-              return (
-
-                <div key={id} className="col-xs-4">
-
-                  <Character
-                    name={name}
-                    image={image}
-                    status={status}
-                  />
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-    </div>
-  )
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route path="/about">
+            <About />
+          </Route>
+          <Route path="/character/:id">
+            <CharacterPage />
+          </Route>
+          <Route path="/*">
+            <Error404 />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
+  );
 }
 
-export default App
