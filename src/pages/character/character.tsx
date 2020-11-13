@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Redirect, useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import axios from 'axios';
 import './character.css'
 
@@ -22,6 +22,7 @@ const Character = () => {
     const { id } = useParams<Props>();
     const [characterData, setCharacterData] = useState<Character>()
     const [loading, setloading] = useState(true)
+    let history = useHistory()
 
     useEffect(() => {
 
@@ -35,37 +36,38 @@ const Character = () => {
                     setCharacterData(results.data)
                     setloading(false)
                 }
+            }).catch(({ response }) => {
+                if (response.status === 404) {
+                    history.push('/not_found')
+                }
             })
+
 
         return function cleanup() {
             mounted = false
         }
     }, [])
 
-    if (id <= "671") {
-        return (
+    return (
 
-            <div>
-                {!loading && (
-                    characterData ? (
-                        <div className="characterInfo">
-                            <h1>{characterData.name}</h1>
-                            <img src={characterData.image} alt="" /><br />
+        <div>
+            {!loading && (
+                characterData ? (
+                    <div className="characterInfo">
+                        <h1>{characterData.name}</h1>
+                        <img src={characterData.image} alt="" /><br />
                         Status: {characterData.status}<br />
                         Species: {characterData.species}<br />
                         Subspecies type: {!characterData.type ? 'No data' : characterData?.type}<br />
                         Sex: {characterData.gender}<br />
                         Created at: {characterData.created}<br />
-                        </div>
-                    ) : (
-                            <p>No data</p>
-                        ))
-                }
-            </div>
-        )
-    } else {
-        return <Redirect to="/not_found" />
-    }
+                    </div>
+                ) : (
+                        <p>No data</p>
+                    ))
+            }
+        </div>
+    )
 }
 
 export default Character
